@@ -35,12 +35,16 @@ rm -rf k8s_1.8.2_image.tar
 systemctl enable kubelet.service
 
 echo "kubernetes 安装成功"
+echo ""
 echo "现在可以启动kubernetes"
+echo ""
 echo "master: "
 echo "           kubeadm init --kubernetes-version=v1.8.2  --pod-network-cidr=10.244.0.0/16"
 echo ""
 echo "master安装完成后，可以选择网络安装"
+echo ""
 echo "flannel: "
 echo "           kubectl apply -f https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kube-flannel.yml"
 echo "calico: "
 echo "           kubectl apply -f https://raw.githubusercontent.com/mohaijiang/k8s-install/master/calico.yaml"
+echo ""
