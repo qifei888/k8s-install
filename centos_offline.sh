@@ -1,8 +1,6 @@
 #!/bin/bash
-mkdir -p /tmp/kubernetes
-cd /tmp/kubernetes
 echo "安装docker"
-wget -qO- "http://minio.one2.newtouch.com:9000/mohaijiang/kubernetes/docker-1.12-rpm.tar.gz" | tar -zx
+tar -zxvf docker-1.12-rpm.tar.gz
 rpm -Uvh *.rpm && rm -rf *.rpm
 
 echo "设置系统变量"
@@ -26,12 +24,12 @@ EOF
 systemctl enable docker && systemctl restart docker
 
 echo "安装kubernetes"
-wget -qO- http://minio.one2.newtouch.com:9000/mohaijiang/kubernetes/1.8.1/k8s_1.8.1_rpm.tar | tar -zx
+tar -zxvf k8s_1.8.1_rpm.tar
 rpm -Uvh *.rpm && rm -rf *.rpm
 
 
 echo "导入kubernetes镜像..."
-wget -qO- http://minio.one2.newtouch.com:9000/mohaijiang/kubernetes/1.8.1/k8s_1.8.2_image.tar.gz | tar -zx
+tar -zxvf k8s_1.8.2_image.tar.gz
 docker load -i k8s_1.8.2_image.tar
 rm -rf k8s_1.8.2_image.tar
 systemctl enable kubelet.service
