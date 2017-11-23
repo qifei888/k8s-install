@@ -2,7 +2,7 @@
 mkdir -p /tmp/kubernetes
 cd /tmp/kubernetes
 echo "安装docker"
-curl -fsSL "https://get.docker.com/" | sh
+curl -fsSL https://get.docker.com/ | sh -s -- --mirror Aliyun
 
 echo "设置系统变量"
 cat > /etc/sysctl.d/k8s.conf <<EOF
