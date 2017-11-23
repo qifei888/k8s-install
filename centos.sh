@@ -2,8 +2,7 @@
 mkdir -p /tmp/kubernetes
 cd /tmp/kubernetes
 echo "安装docker"
-wget -qO- "http://minio.one2.newtouch.com:9000/mohaijiang/kubernetes/docker-1.12-rpm.tar.gz" | tar -zx
-rpm -Uvh *.rpm && rm -rf *.rpm
+curl -fsSL "https://get.docker.com/" | sh
 
 echo "设置系统变量"
 cat > /etc/sysctl.d/k8s.conf <<EOF
