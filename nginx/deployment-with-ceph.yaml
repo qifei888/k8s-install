@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-volume
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-volume
+    spec:
+      hostname: nginx-volume
+      volumes:
+      - name: rbd-vol
+        rbd:
+          monitors:
+            - <ceph ip>:6789
+          pool: <ceph pool>
+          image: <pool image>
+          user: admin
+          secretRef:
+              name: ceph-secret
+          fsType: ext4
+          readOnly: false
+      containers:
+        - name: nginx-volume
+          image: nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+          - name: rbd-vol
+            mountPath: /mnt

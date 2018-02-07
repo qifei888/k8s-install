@@ -15,13 +15,29 @@ kubectl delete node <node name>
 ## 容器简单操作example
 ```
 ## 创建一个nginx 部署
-kubectl run nginx --image=nginx
+kubectl create -f nginx/deployment.yaml
+## 创建一个nginx 服务
+kubectl create -f nginx/service.yaml
+## 查看容器状态，等待容器启动完成
+kubectl get po
 
-## 删除nginx部署
-kubectl delete deploy nginx
+NAME                   READY     STATUS              RESTARTS   AGE
+nginx-8586cf59-gscc2   0/1       ContainerCreating   0          2s
 
-## 将nginx容器服务导出网络端口
-kubectl
+## 当status是Running时容器启动成功
+kubectl get po
+
+NAME                   READY     STATUS    RESTARTS   AGE
+nginx-8586cf59-gscc2   1/1       Running   0          20s
+
+## 创建一个带网络volume的容器部署
+kubectl create -f nginx/cephsecret.yaml
+kubectl create -f nginx/deployment-with-ceph.yaml
+
+
+## 清理环境
+kubectl delete -f nginx
+
 ```
 
 
