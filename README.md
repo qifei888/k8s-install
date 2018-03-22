@@ -19,7 +19,7 @@ kubeadm init --config=kubeadm.yaml
 ```
 ## 选择一个网络进行安装，本例选择calico
 ## 安装calico网络
-kubectl apply -f https://raw.githubusercontent.com/mohaijiang/k8s-install/master/calico.yaml
+kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
 ```
 
 
