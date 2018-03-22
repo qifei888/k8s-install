@@ -12,13 +12,12 @@ curl https://raw.githubusercontent.com/mohaijiang/k8s-install/master/centos.sh |
 
 ```
 ## master节点
-kubeadm init --kubernetes-version=v1.8.2  --pod-network-cidr=10.244.0.0/16
+wget https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kubeadm/kubeadm.yaml
+kubeadm init --config=kubeadm.yaml
 ```
 
 ```
-## 选择以下一个网络进行安装，flannel 或 calico
-## 安装flannel网络
-kubectl apply -f https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kube-flannel.yml
+## 选择一个网络进行安装，本例选择calico
 ## 安装calico网络
 kubectl apply -f https://raw.githubusercontent.com/mohaijiang/k8s-install/master/calico.yaml
 ```

@@ -31,7 +31,9 @@ echo "安装kubernetes"
 wget -qO- http://minio.test.onepoc.xonestep.com/mohaijiang/kubernetes/1.9.6/k8s_1.9.6_rpm.tar.gz | tar -zx
 rpm -Uvh *.rpm && rm -rf *.rpm
 
+sed -i 'N;10i\Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.test.onepoc.xonestep.com/google_containers/pause-amd64:3.0"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
+systemctl daemon-reload
 systemctl enable kubelet.service
 
 echo "kubernetes 安装成功"
@@ -39,7 +41,8 @@ echo ""
 echo "现在可以启动kubernetes"
 echo ""
 echo "master: "
-echo "           kubeadm init --config=https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kubeadm/kubeadm.yaml"
+echo "           wget https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kubeadm/kubeadm.yaml"
+echo "           kubeadm init --config=kubeadm.yaml"
 echo ""
 echo "master安装完成后，可以选择网络安装"
 echo ""
