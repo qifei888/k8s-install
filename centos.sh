@@ -1,5 +1,4 @@
 #!/bin/bash
-set -ex
 swapoff -a
 mkdir -p /tmp/kubernetes
 cd /tmp/kubernetes
@@ -31,7 +30,7 @@ setenforce 0
 
 echo "安装kubernetes"
 wget -qO- http://minio.test.onepoc.xonestep.com/mohaijiang/kubernetes/1.10.0/k8s_1.10.0_rpm.tar.gz | tar -zx
-rpm -Uvh *.rpm && rm -rf *.rpm
+rpm -Uvh *.rpm --froce && rm -rf *.rpm
 
 sed -i 'N;10i\Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.test.onepoc.xonestep.com/google_containers/pause-amd64:3.0"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
