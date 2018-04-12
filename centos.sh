@@ -1,5 +1,6 @@
 #!/bin/bash
 set -ex
+swapoff -a
 mkdir -p /tmp/kubernetes
 cd /tmp/kubernetes
 echo "安装docker"
