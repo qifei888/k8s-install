@@ -6,8 +6,6 @@ echo "安装docker"
 # curl -fsSL https://get.docker.com/ | sh -s -- --mirror Aliyun
 yum install -y docker wget
 
-sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
-
 echo "设置docker daemon.json"
 cat > /etc/docker/daemon.json <<EOF
 {
@@ -16,6 +14,11 @@ cat > /etc/docker/daemon.json <<EOF
 EOF
 
 systemctl enable docker && systemctl restart docker
+
+sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
+
+systemctl daemon-reload
+systemctl restart docker
 
 echo "设置系统变量"
 cat > /etc/sysctl.d/k8s.conf <<EOF
