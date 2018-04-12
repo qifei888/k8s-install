@@ -1,11 +1,12 @@
 #!/bin/bash
+set -ex
 mkdir -p /tmp/kubernetes
 cd /tmp/kubernetes
 echo "安装docker"
 # curl -fsSL https://get.docker.com/ | sh -s -- --mirror Aliyun
 yum install -y docker wget
 
-
+sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
 
 echo "设置docker daemon.json"
 cat > /etc/docker/daemon.json <<EOF
@@ -28,7 +29,7 @@ setenforce 0
 
 
 echo "安装kubernetes"
-wget -qO- http://minio.test.onepoc.xonestep.com/mohaijiang/kubernetes/1.9.6/k8s_1.9.6_rpm.tar.gz | tar -zx
+wget -qO- http://minio.test.onepoc.xonestep.com/mohaijiang/kubernetes/1.10.0/k8s_1.10.0_rpm.tar.gz | tar -zx
 rpm -Uvh *.rpm && rm -rf *.rpm
 
 sed -i 'N;10i\Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.test.onepoc.xonestep.com/google_containers/pause-amd64:3.0"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
@@ -42,12 +43,12 @@ echo "现在可以启动kubernetes"
 echo ""
 echo "master: "
 echo "           wget https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kubeadm/kubeadm.yaml"
-echo "           kubeadm init --config=kubeadm.yaml"
+echo "           kubeadm init --config=kubeadm.yaml "
 echo ""
 echo "master安装完成后，可以选择网络安装"
 echo ""
 echo "calico: "
-echo "           kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml"
+echo "           kubectl apply -f https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kubeadm/calico.yaml"
 echo ""
 echo "或者作为node节点join到kubernetes集群"
 echo ""
