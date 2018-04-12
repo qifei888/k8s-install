@@ -6,6 +6,5 @@ kubernetesVersion: v1.10.0
 networking:
   podSubnet: 10.244.0.0/16
 imageRepository: registry.test.onepoc.xonestep.com/google_containers
-tokenTTL: 0
 featureGates:
   CoreDNS: true
