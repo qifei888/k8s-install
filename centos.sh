@@ -15,6 +15,8 @@ EOF
 
 systemctl enable docker && systemctl restart docker
 
+iptables -P FORWARD ACCEPT
+
 sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
 
 systemctl daemon-reload
