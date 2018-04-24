@@ -2,7 +2,7 @@ apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 etcd:
   image: registry.test.onepoc.xonestep.com/google_containers/etcd-amd64:3.1.12
-kubernetesVersion: v1.10.0
+kubernetesVersion: v1.10.1
 networking:
   podSubnet: 10.244.0.0/16
 imageRepository: registry.test.onepoc.xonestep.com/google_containers
