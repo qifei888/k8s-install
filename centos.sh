@@ -18,6 +18,7 @@ systemctl enable docker && systemctl restart docker
 iptables -P FORWARD ACCEPT
 
 sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
+sed -i '18i\ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT' /usr/lib/systemd/system/docker.service
 
 systemctl daemon-reload
 systemctl restart docker
@@ -30,13 +31,20 @@ EOF
 
 sysctl -p /etc/sysctl.d/k8s.conf
 
-setenforce 0
-
 
 echo "安装kubernetes"
-wget -qO- http://minio.test.onepoc.xonestep.com/mohaijiang/kubernetes/1.10.1/k8s_1.10.1_rpm.tar.gz | tar -zx
-rpm -Uvh *.rpm  && rm -rf *.rpm
-
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+EOF
+setenforce 0
+yum install -y kubelet kubeadm kubectl
+systemctl enable kubelet && systemctl start kubelet
 sed -i 'N;10i\Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.test.onepoc.xonestep.com/google_containers/pause-amd64:3.1"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 systemctl daemon-reload
