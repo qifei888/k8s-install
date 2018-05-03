@@ -1,9 +1,17 @@
 #!/bin/bash
 swapoff -a
-
+## 使用阿里云 centos源
+curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
 echo "安装docker"
-# curl -fsSL https://get.docker.com/ | sh -s -- --mirror Aliyun
-yum install -y docker wget
+# step 1: 安装必要的一些系统工具
+yum install -y yum-utils device-mapper-persistent-data lvm2
+# Step 2: 添加软件源信息
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+# Step 3: 更新并安装 Docker-CE
+yum makecache fast
+
+yum install -y docker-ce-17.03.2.ce-1.el7.centos.docker-ce.x86_64
+
 
 echo "设置docker daemon.json"
 cat > /etc/docker/daemon.json <<EOF
@@ -16,8 +24,9 @@ systemctl enable docker && systemctl restart docker
 
 iptables -P FORWARD ACCEPT
 
-sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
-sed -i '18i\ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT' /usr/lib/systemd/system/docker.service
+#sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
+sed -i '10i\ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT' /usr/lib/systemd/system/docker.service
+sed -i 's/systemd/cgroupfs/g' /usr/lib/systemd/system/docker.service
 
 systemctl daemon-reload
 systemctl restart docker
