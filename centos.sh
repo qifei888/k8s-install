@@ -1,7 +1,6 @@
 #!/bin/bash
 swapoff -a
-mkdir -p /tmp/kubernetes
-cd /tmp/kubernetes
+
 echo "安装docker"
 # curl -fsSL https://get.docker.com/ | sh -s -- --mirror Aliyun
 yum install -y docker wget
@@ -43,6 +42,7 @@ repo_gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 setenforce 0
+yum --showduplicate list kubeadm* |grep 1.10
 yum install -y kubelet kubeadm kubectl
 systemctl enable kubelet && systemctl start kubelet
 sed -i 'N;10i\Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.test.onepoc.xonestep.com/google_containers/pause-amd64:3.1"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
