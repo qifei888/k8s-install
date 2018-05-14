@@ -10,10 +10,13 @@ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/d
 # Step 3: 更新并安装 Docker-CE
 yum makecache fast
 
-yum install -y docker-ce-17.03.2.ce-1.el7.centos.docker-ce.x86_64
+yum install -y --setopt=obsoletes=0 \
+  docker-ce-17.03.2.ce-1.el7.centos \
+  docker-ce-selinux-17.03.2.ce-1.el7.centos
 
 
 echo "设置docker daemon.json"
+mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "registry-mirrors": ["https://registry.docker-cn.com"]
@@ -25,8 +28,8 @@ systemctl enable docker && systemctl restart docker
 iptables -P FORWARD ACCEPT
 
 #sed -i "s/overlay2/devicemapper/g" /etc/sysconfig/docker-storage
-sed -i '10i\ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT' /usr/lib/systemd/system/docker.service
-sed -i 's/systemd/cgroupfs/g' /usr/lib/systemd/system/docker.service
+sed -i '12i\ExecStartPost=/usr/sbin/iptables -P FORWARD ACCEPT' /usr/lib/systemd/system/docker.service
+#
 
 systemctl daemon-reload
 systemctl restart docker
@@ -55,6 +58,7 @@ yum --showduplicate list kubeadm* |grep 1.10
 yum install -y kubelet kubeadm kubectl
 systemctl enable kubelet && systemctl start kubelet
 sed -i 'N;10i\Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.test.onepoc.xonestep.com/google_containers/pause-amd64:3.1"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+sed -i 's/systemd/cgroupfs/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 systemctl daemon-reload
 systemctl enable kubelet.service
@@ -66,6 +70,9 @@ echo ""
 echo "master: "
 echo "           wget https://raw.githubusercontent.com/mohaijiang/k8s-install/master/kubeadm/kubeadm.yaml"
 echo "           kubeadm init --config=kubeadm.yaml "
+echo ""
+echo "master  参加负载"
+echo "kubectl taint nodes --all node-role.kubernetes.io/master-"
 echo ""
 echo "master安装完成后，可以选择网络安装"
 echo ""
