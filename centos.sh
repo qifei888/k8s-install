@@ -19,6 +19,7 @@ echo "设置docker daemon.json"
 mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
+  "storage-driver": "devicemapper",
   "registry-mirrors": ["https://registry.docker-cn.com"]
 }
 EOF
