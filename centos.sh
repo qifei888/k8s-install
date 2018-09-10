@@ -19,6 +19,7 @@ echo "设置docker daemon.json"
 mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
+  "storage-driver": "devicemapper",
   "registry-mirrors": ["https://registry.docker-cn.com"]
 }
 EOF
@@ -54,11 +55,9 @@ repo_gpgcheck=1
 gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
 EOF
 setenforce 0
-yum --showduplicate list kubeadm* |grep 1.10
-yum install -y kubelet-1.10.5 kubeadm-1.10.5 kubectl-1.10.5
+yum install -y kubelet kubeadm kubectl
 systemctl enable kubelet && systemctl start kubelet
-sed -i 'N;10i\Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.xonestep.com/google_containers/pause-amd64:3.1"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-sed -i 's/systemd/cgroupfs/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+echo " KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.xonestep.com/google_containers/pause:3.1" > /etc/sysconfig/kubelet
 
 systemctl daemon-reload
 systemctl enable kubelet.service
